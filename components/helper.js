@@ -5,7 +5,7 @@
  * 
  * output: {"FEN": string, "PlayerOnMove": number}
  * 
- * TODO
+ * FIXME
  **/
 const parsePGN = (pgn) => {
   return {
@@ -18,9 +18,10 @@ const parsePGN = (pgn) => {
  * 
  * output: int[][]
  * 
- * TODO
+ * FIXME
  **/
 const parseFEN = (FEN) => {
+  /*
   //for each row
   FEN.split("/").map(
     row => {
@@ -35,7 +36,8 @@ const parseFEN = (FEN) => {
       }
       return output;
     }
-  )
+  )*/
+  
   return [
     [null, null, null],
     [null, 0, null],

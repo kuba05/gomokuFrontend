@@ -1,6 +1,16 @@
 import React from 'react';
 
 export class Field extends React.Component {
+  
+  /**
+   * props: {
+   *   value: number|null;
+   *   onClick: (e: any) => void;
+  **/
+  constructor (props) {
+    super(props);
+  }
+  
   render() {
     return <td onClick={this.props.onClick}> {
       this.props.value === null? "#":
