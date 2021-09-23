@@ -73,6 +73,7 @@ export class Board extends React.Component {
     console.log(this.props.players)
     console.log("clicked ", x,y);
     //sent the event to all players
+    //TODO: should be done with events
     this.props.players.forEach(player => player.tileClicked({x,y, value}));
   }
   
