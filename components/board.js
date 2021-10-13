@@ -2,7 +2,7 @@ import React from 'react';
 import { Player } from './player.js';
 import helper from './helper.js';
 import { Field } from './field.js';
-
+import { History } from './history.js';
 export class Board extends React.Component {
   /**
   * PGN: string - is our implementation of PGN
@@ -23,7 +23,8 @@ export class Board extends React.Component {
     
     this.state = {
       boardState: helper.parseFEN(unpacked["FEN"]),
-      playerOnMove: unpacked["PlayerOnMove"]
+      playerOnMove: unpacked["PlayerOnMove"],
+      history: new History()
     };
   }
   
@@ -39,7 +40,19 @@ export class Board extends React.Component {
    * 
    * move: {x: number, y: number}
   **/
-  makeMove =  (move) => {
+  makeMove = (move) => {
+    this.executeMove(move, this.state.playerOnMove);
+    this.state.history.add(move);
+  }
+  
+  /**
+   * Add value on given position. 
+   * Shouldn't be used directly.
+   * 
+   * position: {x: number, y: number}
+   * value: number
+  **/
+  executeMove = (position, value) => {
     //current player's turn ends
     this.props.players[this.state.playerOnMove].endTurn();
     
@@ -48,7 +61,7 @@ export class Board extends React.Component {
       (oldState) => {
         let newState = {...oldState};
         
-        newState.boardState[move.y][move.x] = oldState.playerOnMove;
+        newState.boardState[position.y][position.x] = value;
         
         //change playerOnMove
         newState.playerOnMove = (newState.playerOnMove+1)%2;
@@ -59,6 +72,13 @@ export class Board extends React.Component {
         return newState;
       }
     );
+  }
+  
+  /**
+   * Undo the last made move
+  **/
+  undoMove = () => {
+    this.executeMove(this.state.history.undo(), null);
   }
   
   /**
