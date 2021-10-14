@@ -1,8 +1,8 @@
 import React from "react";
 
 export class History {
-  constructor () {
-    this.activeNode = new Node(null, null, null);
+  constructor (playerOnMove) {
+    this.activeNode = new Node(null, 1 + playerOnMove, null);
   }
   
   add = (move) => {
@@ -24,16 +24,18 @@ export class History {
   **/
   getJSX = () => {
     console.log("gettingJsx");
+    console.log(this.activeNode);
     //find the root node
     let root = this.activeNode;
     while (root.parent) {
       root = root.parent;
     }
     console.log(root);
-    console.log("jsx:" + root.getJSX())
+    console.log("jsx of root: " + root.getJSX())
+    console.log(this.activeNode)
     return <div className="history">
       <div className="moves">
-        {root.getJSX()}
+        {root.getJSX(this.activeNode)}
       </div>
     </div>
   }
@@ -45,11 +47,17 @@ class Node {
    * player: Player
    * parent: Node | null
   **/
-  constructor (move, player, parent) {
+  constructor (move, player, parent, depth=0) {
     this.move = move;
     this.player = player;
     this.parent = parent;
     this.kids = [];
+    this.depth = depth;
+    
+    //this is the first move of the game
+    if (depth === 0 && player) {
+      depth += player;
+    }
   }
   
   /**
@@ -72,7 +80,7 @@ class Node {
       
     //if not, create new one
     } else {
-      let newKid = new Node(move, (this.player+1)%2, this);
+      let newKid = new Node(move, (this.player+1)%2, this, this.depth+1);
       this.kids.push(newKid);
       return newKid;
     }
@@ -87,18 +95,30 @@ class Node {
   **/
   getJSX = (activeNode) => {
     let move = this.move ? this.move.x + "," + this.move.y: "";
+    console.log("active node")
+    console.log(activeNode);
     return (
       <React.Fragment>
         {
-          // This Node
-          this.move && <span className="m-5">{this.move.x + ", " + this.move.y}</span>
+          // move number
+          this.player === 0 &&
+          <span className="moveCount">
+            {(this.depth + 1)/2}.
+          </span>
         }
         {
-          this.kids.slice(1).map((kid) => <span> ({kid.getJSX()})</span>)
+          // This Node
+          this.move && 
+          <span className={this === activeNode? "activeMove": ""}>
+            { String.fromCharCode(this.move.y+97) + (this.move.x + 1) }
+          </span>
+        }
+        {
+          this.kids.slice(1).map((kid) => <span> ({kid.getJSX(activeNode)})</span>)
         }
         { 
           //main kid
-          this.kids.length > 0 && this.kids[0].getJSX()
+          this.kids.length > 0 && this.kids[0].getJSX(activeNode)
         }
       </React.Fragment>
     );

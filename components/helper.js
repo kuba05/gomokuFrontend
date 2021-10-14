@@ -9,8 +9,8 @@
  **/
 const parsePGN = (pgn) => {
   return {
-    "FEN": "5/5/2x2/5/5",
-    "PlayerOnMove": 1
+    "FEN": "15"+"/15".repeat(14),
+    "PlayerOnMove": 0
   }
 }
 /**
@@ -36,9 +36,9 @@ const parseFEN = (FEN) => {
             output.push(null);
           }
           numberOfEmptyFields = 0;
-          if (char === "x") {
+          if (char.toLowerCase() === "x") {
             output.push(0);
-          } else if (char === "O") {
+          } else if (char.toLowerCase() === "o") {
             ouput.push(1);
           }
           continue;

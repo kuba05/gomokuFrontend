@@ -24,7 +24,7 @@ export class Board extends React.Component {
     this.state = {
       boardState: helper.parseFEN(unpacked["FEN"]),
       playerOnMove: unpacked["PlayerOnMove"],
-      history: new History()
+      history: new History(unpacked["PlayerOnMove"])
     };
   }
   
