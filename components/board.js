@@ -55,7 +55,7 @@ export class Board extends React.Component {
   executeMove = (position, value) => {
     //current player's turn ends
     this.props.players[this.state.playerOnMove].endTurn();
-    
+    console.log("executing move");
     //make the move
     this.setState(
       (oldState) => {
@@ -78,7 +78,8 @@ export class Board extends React.Component {
    * Undo the last made move
   **/
   undoMove = () => {
-    this.executeMove(this.state.history.undo(), null);
+    let move = this.state.history.undo();
+    move && this.executeMove(move, null);
   }
   
   /**
@@ -90,8 +91,6 @@ export class Board extends React.Component {
    * value: number | null
   **/
   tileClicked (x, y, value) {
-    console.log(this.props.players)
-    console.log("clicked ", x,y);
     //sent the event to all players
     //TODO: should be done with events
     this.props.players.forEach(player => player.tileClicked({x,y, value}));
@@ -113,7 +112,16 @@ export class Board extends React.Component {
           }
         </tr>
       );
-      
-    return <table><tbody>{lines}</tbody></table>;
+    
+    console.log(this.state);
+    return <div>
+      <table><tbody>{lines}</tbody></table>
+      <div className="history">
+        {this.state.history.getJSX()}
+      </div>
+      <div className="undo">
+        <button onClick={this.undoMove}>undo</button>
+      </div>
+    </div>;
   }
 }
